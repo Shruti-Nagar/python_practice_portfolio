@@ -21,6 +21,16 @@ print(f'pressure_hpa median = {pressure_median:.2f} hpa')
 print('\n# after imputation -- missing value audit')
 print(df.isnull().sum().to_string())
 
+# CYCLICAL ENCODING
+# sine/cosine encoding mapes time series onto a circle so that 
+# distance reflects true calender proximity
+df['month_sin'] = np.sin(2*np.pi * df['month']/12)
+df['month_cos'] = np.cos(2*np.pi * df['month']/12)
+
+# cyclical encoding for day_of_year
+df['doy_sin'] = np.sin(2*np.pi * df['day_of_year']/365)
+df['doy_cos'] = np.sin(2*np.pi * df['day_of_year']/365)
+
 # Magnus-Tetens Heat Index Approximation - to calc heat index
 df['heat_index'] = np.round(
     df['temperature_c'] +
@@ -37,3 +47,17 @@ df['precip_3day_avg'] = (
         .mean().round(2)
     )
 
+# Calc 3-day avg cloud cover
+df['cloud_3day_avg'] = (
+    df['cloud_cover_pct'].rolling(
+        window=3, 
+        min_periods=1).mean().round(2)
+)
+
+# pressure change from previous day
+# So.... a falling barometer(neg diff) strongly signals incoming rain.
+# this is one of the most powerful meteorological signals.
+df['pressure_change'] = df['pressure.hps'].diff().round(2)
+
+# fill 1st day with 0.0 as it doesn't have any previous day
+df['pressure_change'] = df['pressure_change'].fillna(0.0)
