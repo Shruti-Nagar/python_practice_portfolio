@@ -1,5 +1,3 @@
-#FEATURE ENGINEERING
-
 import pandas as pd
 import numpy as np
 
@@ -22,6 +20,8 @@ print(f'pressure_hpa median = {pressure_median:.2f} hpa')
 
 print('\n# after imputation -- missing value audit')
 print(df.isnull().sum().to_string())
+
+#FEATURE ENGINEERING
 
 # CYCLICAL ENCODING
 # sine/cosine encoding mapes time series onto a circle so that 
@@ -77,4 +77,6 @@ for c in new_cols:
 
 print(f'\nDataset now has {df.shape[1]} columns and {df.shape[0]} rows.')
 
-print(df.head())
+# print(df.head())
+
+# FEATURE SCALING
