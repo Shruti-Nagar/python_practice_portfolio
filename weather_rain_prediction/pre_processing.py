@@ -1,3 +1,5 @@
+#FEATURE ENGINEERING
+
 import pandas as pd
 import numpy as np
 
@@ -61,3 +63,18 @@ df['pressure_change'] = df['pressure.hps'].diff().round(2)
 
 # fill 1st day with 0.0 as it doesn't have any previous day
 df['pressure_change'] = df['pressure_change'].fillna(0.0)
+
+# binary rain flag for today
+df['rained_today'] = (df['precipitation_mm'] > 0).astype(int)
+
+new_cols = ['month_sin', 'month_cos', 'doy_sin', 'doy_cos', 
+            'heat_index', 'precip_3day_avg', 'cloud_3day_avg',
+            'pessure_change', 'rained_today']
+print(f'\n{len(new_cols)} New Features added:')
+
+for c in new_cols:
+    print(c)
+
+print(f'\nDataset now has {df.shape[1]} columns and {df.shape[0]} rows.')
+
+print(df.head())
